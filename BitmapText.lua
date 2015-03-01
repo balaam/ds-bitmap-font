@@ -84,15 +84,25 @@ function BitmapText:Create(texId, w, h)
             ['!'] = {3, 4},
             ['?'] = {4, 4},
             [':'] = {5, 4},
+            ['@'] = {6, 4},
+            [','] = {7, 4},
+            ['.'] = {8, 4},
 
         },
-        mSprite = Sprite.Create()
+        mSprite = Sprite.Create(),
+        mAlignX = "left",
+        mAlignY = "top"
 
     }
     this.mSprite:SetTexture(this.mTexture)
 
     setmetatable(this, self)
     return this
+end
+
+function BitmapText:AlignText(x, y)
+    self.mAlignX = x
+    self.mAlignY = y
 end
 
 function BitmapText:IndexToUV(x, y)
@@ -118,12 +128,13 @@ function BitmapText:DrawText(renderer, x, y, text)
 
 end
 
-function BitmapText:RenderSubString(renderer, x, y, text, start, finish)
+function BitmapText:RenderSubString(renderer, x, y, text, start, finish, color)
 
     start = start or 1
     finish = finish or string.len(text)
+    color = color or Vector.Create(0, 0, 0, 1)
 
-
+    self.mSprite:SetColor(color)
     local prevC = -1
     for i = start, finish do
         local c = string.sub(text, i, i)
@@ -142,18 +153,18 @@ function BitmapText:RenderSubString(renderer, x, y, text, start, finish)
 end
 
 
-function BitmapText:RenderLineWrap(renderer, x, y, text, color,
-                                   alignX, alignY, maxWidth)
-    local yOffset = 0
+function BitmapText:DrawText2d(renderer, x, y, text, color, maxWidth)
 
+    local yOffset = 0
+    maxWidth = maxWidth or -1
     -- Center to top-left origin
     x = x + self.mGlyphW * 0.5
     y = y - self.mGlyphH * 0.5
 
-    if alignY == "bottom" then
+    if self.mAlignY == "bottom" then
         local lines = self:CountLines(text, maxWidth)
         yOffset = lines * self.mGlyphH
-    elseif alignY == "center" then
+    elseif self.mAlignY == "center" then
         local lines = self:CountLines(text, maxWidth)
         lines = lines * 0.5
         yOffset = lines * self.mGlyphH
@@ -170,15 +181,16 @@ function BitmapText:RenderLineWrap(renderer, x, y, text, color,
         lineEnd = math.min(textLen, lEnd) -- this shouldn't happen! hack fix!
 
         local xPos = x
-        if alignX == "right" then
+        if self.mAlignX == "right" then
             xPos = xPos - outPixelWidth
-        elseif alignX == "center" then
+        elseif self.mAlignX == "center" then
            xPos = xPos - outPixelWidth * 0.5
         end
 
         self:RenderSubString(renderer,
                         xPos, y + yOffset,
-                        text, outStart, lineEnd)
+                        text, outStart, lineEnd,
+                        color)
 
         y = y - self.mGlyphH;
     end
@@ -186,9 +198,9 @@ function BitmapText:RenderLineWrap(renderer, x, y, text, color,
 end
 
 
-function BitmapText:RenderLine(renderer, x, y, text, color, alignX, alignY)
-    alignX = alignX or "left"
-    alignY = alignY or "top"
+function BitmapText:RenderLine(renderer, x, y, text, color)
+    alignX = self.mAlignX
+    alignY = self.mAlignY
     color = color or Vector.Create(1,1,1,1)
 
     if alignX == "right" then
