@@ -7,8 +7,8 @@ function BitmapText:Create(def)
         mTexture = texture,
         mWidth = texture:GetWidth(),
         mHeight = texture:GetHeight(),
-        mGlyphW = def.width,
-        mGlyphH = def.height,
+        mGlyphW = def.cut_width,
+        mGlyphH = def.cut_height,
         mLookUp = def.lookup,
         mSprite = Sprite.Create(),
         mAlignX = "left",
@@ -19,6 +19,15 @@ function BitmapText:Create(def)
 
     setmetatable(this, self)
     return this
+end
+
+function BitmapText:GlyphWidth(glyph)
+
+end
+
+function BitmapText:GlyphUV(glyph)
+    local data = self.mLookUp[glyph] or self.mLookUp['?']
+    return self:IndexToUV(unpack(data.uv))
 end
 
 function BitmapText:AlignText(x, y)
@@ -49,7 +58,8 @@ function BitmapText:DrawText(renderer, x, y, text)
     local _x = x
     for i = 1, string.len(text) do
         local c = string.sub(text, i, i)
-        self.mSprite:SetUVs(self:IndexToUV(unpack(self.mLookUp[c])))
+
+        self.mSprite:SetUVs(self:GlyphUV(c))
         self.mSprite:SetPosition(_x, y)
         renderer:DrawSprite(self.mSprite)
         _x = _x + self.mGlyphW
@@ -72,8 +82,7 @@ function BitmapText:RenderSubString(renderer, x, y, text, start, finish, color)
             x = x + self.mGlyphW
         end
 
-        local cData = self.mLookUp[c] or self.mLookUp['?']
-        self.mSprite:SetUVs(self:IndexToUV(unpack(cData)))
+        self.mSprite:SetUVs(self:GlyphUV(c))
         self.mSprite:SetPosition(x, y)
         renderer:DrawSprite(self.mSprite)
 
@@ -144,7 +153,7 @@ function BitmapText:RenderLine(renderer, x, y, text, color)
     end
 
     if alignY == "bottom" then
-        y = y - self.mGlyphH;
+        y = y - self.mGlyphH
     elseif alignY == "center" then
         y = y - self.mGlyphH * 0.5
     end
@@ -158,8 +167,8 @@ function BitmapText:RenderLine(renderer, x, y, text, color)
             x = x + self.mGlyphW
         end
 
-        local cData = self.mLookUp[c] or self.mLookUp['?']
-        self.mSprite:SetUVs(self:IndexToUV(unpack(cData)))
+
+        self.mSprite:SetUVs(self:GlyphUV(c))
         self.mSprite:SetPosition(x, y)
         renderer:DrawSprite(self.mSprite)
 
