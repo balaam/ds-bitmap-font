@@ -22,7 +22,8 @@ function BitmapText:Create(def)
 end
 
 function BitmapText:GlyphWidth(glyph)
-
+    local data = self.mLookUp[glyph] or self.mLookUp['?']
+    return data.stepX or self.mGlyphW
 end
 
 function BitmapText:GlyphUV(glyph)
@@ -62,7 +63,7 @@ function BitmapText:DrawText(renderer, x, y, text)
         self.mSprite:SetUVs(self:GlyphUV(c))
         self.mSprite:SetPosition(_x, y)
         renderer:DrawSprite(self.mSprite)
-        _x = _x + self.mGlyphW
+        _x = _x + self:GlyphWidth(c)
     end
 
 end
@@ -79,7 +80,7 @@ function BitmapText:RenderSubString(renderer, x, y, text, start, finish, color)
         local c = string.sub(text, i, i)
         if prevC ~= -1 then
             -- kerning can be done here!
-            x = x + self.mGlyphW
+            x = x + self:GlyphWidth(prevC)
         end
 
         self.mSprite:SetUVs(self:GlyphUV(c))
@@ -96,7 +97,7 @@ function BitmapText:DrawText2d(renderer, x, y, text, color, maxWidth)
     local yOffset = 0
     maxWidth = maxWidth or -1
     -- Center to top-left origin
-    x = x + self.mGlyphW * 0.5
+
     y = y - self.mGlyphH * 0.5
 
     if self.mAlignY == "bottom" then
@@ -111,6 +112,13 @@ function BitmapText:DrawText2d(renderer, x, y, text, color, maxWidth)
     local lineEnd = 1
     local textLen = string.len(text)
 
+    if textLen < 1 then
+        return
+    end
+
+    -- local c = string.sub(text, 1, 1)
+    x = x + self.mGlyphW * 0.5
+
     while lineEnd < (textLen + 1) do
 
         local outStart, lEnd, outPixelWidth =
@@ -122,7 +130,7 @@ function BitmapText:DrawText2d(renderer, x, y, text, color, maxWidth)
         if self.mAlignX == "right" then
             xPos = xPos - outPixelWidth
         elseif self.mAlignX == "center" then
-           xPos = xPos - outPixelWidth * 0.5
+           xPos = xPos - math.ceil(outPixelWidth * 0.5)
         end
 
         self:RenderSubString(renderer,
@@ -164,7 +172,7 @@ function BitmapText:RenderLine(renderer, x, y, text, color)
         local c = string.sub(text, i, i)
 
         if prevC ~= -1 then
-            x = x + self.mGlyphW
+            x = x + self:GlyphWidth(prevC)
         end
 
 
@@ -178,7 +186,14 @@ end
 
 
 function BitmapText:CalcWidth(str)
-    return string.len(str) * self.mGlyphW
+    -- return string.len(str) * self.mGlyphW
+    local width = 0
+    for i = 1, string.len(str) do
+        local c = string.sub(str, i, i)
+        width = width + self:GlyphWidth(c)
+    end
+
+    return width
 end
 
 function BitmapText:CalcHeight()
@@ -238,14 +253,14 @@ function BitmapText:NextLine(text, cursor, maxWidth)
         if prevC ~= -1 then
 
             local kern = 0;
-            local finishW = self.mGlyphW;
+            local finishW = self:GlyphWidth(prevC)--self.mGlyphW;
 
             if start == cursor or
                 pixelWidth + kern + finishW < maxWidth then
                 pixelWidth = pixelWidth + finishW + kern
 
             else
-                finishW = self.mGlyphW
+                finishW = self:GlyphWidth(prevC)
                 return cursor, start + 1, pixelWidthStart + finishW
             end
         end
@@ -258,7 +273,7 @@ function BitmapText:NextLine(text, cursor, maxWidth)
     local finishW = 0;
 
     if prevC ~= -1 then
-        finishW = self.mGlyphW;
+        finishW = self:GlyphWidth(prevC);
     end
 
     -- From cursor to last word

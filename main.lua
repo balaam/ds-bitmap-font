@@ -37,13 +37,16 @@ function drawCross(x, y)
     gRenderer:DrawLine2d(x, y, x + 60, y, gLineColor)
 end
 
-function drawText(bitmapText, x, y, alignX, text)
+function drawText(bitmapText, x, y, alignX, alignY, text, maxW)
 
+    local maxWidth = maxW or gMaxWidth
     text = text or lorem
-    local size1 = bitmapText:MeasureText(text, gMaxWidth)
+    local size1 = bitmapText:MeasureText(text, maxWidth)
     local size = Vector.Create(size1)
 
-    bitmapText:DrawText2d(gRenderer, x, y, text, Vector.Create(0,0,0,1), gMaxWidth)
+    bText:AlignText(alignX, alignY or "bottom")
+
+    bitmapText:DrawText2d(gRenderer, x, y, text, Vector.Create(0,0,0,1), maxWidth)
     drawCross(x, y)
     drawDot(x, y)
 
@@ -51,7 +54,12 @@ function drawText(bitmapText, x, y, alignX, text)
         size1:SetX(size1:X() * -1)
     elseif alignX == "center" then
         x = x - size1:X() /2
+    end
+
+    if alignY == "center" then
         y = y - size1:Y() /2
+    elseif alignY == "top" then
+        y = y - size1:Y()
     end
 
     gRenderer:DrawLine2d(x, y, x + size1:X(), y, Vector.Create(1, 0, 0, 1))
@@ -59,17 +67,7 @@ function drawText(bitmapText, x, y, alignX, text)
     gRenderer:DrawLine2d(x + size1:X(), y, x + size1:X(), y + size1:Y(), Vector.Create(1,0,0,1))
     gRenderer:DrawLine2d(x + size1:X(), y + size1:Y(), x, y + size1:Y(), Vector.Create(1,0,0,1))
 
-    if alignX == "left" then
-        gRenderer:DrawLine2d(x + gMaxWidth, -150, x + gMaxWidth, 150, Vector.Create(0, 1, 0, 1))
-        gRenderer:AlignText("center", "center")
-        gRenderer:DrawText2d(x + gMaxWidth, -50, "MaxWidth: " .. gMaxWidth, Vector.Create(0,0,0,1), 80)
-    elseif alignX == "right" then
-        gRenderer:DrawLine2d(x - gMaxWidth, -150, x - gMaxWidth, 150, Vector.Create(0, 1, 0, 1))
-        gRenderer:AlignText("center", "center")
-        gRenderer:DrawText2d(x - gMaxWidth, -50, "MaxWidth: " .. gMaxWidth, Vector.Create(0,0,0,1), 80)
-    elseif alignX == "center" then
 
-    end
 
     -- yeh this is pretty hacky
     return size
@@ -103,7 +101,7 @@ function drawTextWithLabel(textX, textY, alignX, alignY)
         posText = 0
     end
 
-    local size = drawText(bText, posText, textY, alignX)
+    local size = drawText(bText, posText, textY, alignX, alignY)
     local offsetX = textX + size:X()/2
     local offsetY = -15
 
@@ -111,10 +109,25 @@ function drawTextWithLabel(textX, textY, alignX, alignY)
         offsetX = textX + (size:X() * -0.5)
     elseif alignX == "center" then
         offsetX = 0
+    end
+
+    if alignY == "center" then
         offsetY = (textY - size:Y()*0.5) - 15
     end
 
     gRenderer:DrawText2d(offsetX , offsetY, posLabel, Vector.Create(0,0,0,1))
+
+    if alignX == "left" then
+        gRenderer:DrawLine2d(textX + gMaxWidth, -150, textX + gMaxWidth, 150, Vector.Create(0, 1, 0, 1))
+        gRenderer:AlignText("center", "center")
+        gRenderer:DrawText2d(textX + gMaxWidth, -50, "MaxWidth: " .. gMaxWidth, Vector.Create(0,0,0,1), 80)
+    elseif alignX == "right" then
+        gRenderer:DrawLine2d(textX - gMaxWidth, -150, textX - gMaxWidth, 150, Vector.Create(0, 1, 0, 1))
+        gRenderer:AlignText("center", "center")
+        gRenderer:DrawText2d(textX - gMaxWidth, -50, "MaxWidth: " .. gMaxWidth, Vector.Create(0,0,0,1), 80)
+    elseif alignX == "center" then
+
+    end
 end
 
 
@@ -132,5 +145,17 @@ function update()
 
     local x = 0
     local y = -100
-    drawText(bText, x, y, "center", "1010")
+    drawText(bText, x, y, "center", "bottom", "1010")
+    drawText(bText, x - 50, y, "right", "bottom", "1010")
+    drawText(bText, x + 50, y, "left", "bottom", "1010")
+
+    -- pixel width is 26, so do a 30 width
+    y = -125
+    drawText(bText, x - 50, y, "right", "center", "1010 1010", 30)
+    drawText(bText, x + 50, y, "left", "center", "1010 1010", 30)
+
+    y = -150
+    drawText(bText, x, y, "center", "top", "1010 101010", 30)
+    drawText(bText, x - 50, y, "right", "top", "1010 1010", 30)
+    drawText(bText, x + 50, y, "left", "top", "1010 1010", 30)
 end
