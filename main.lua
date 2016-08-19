@@ -39,7 +39,10 @@ end
 
 function drawText(bitmapText, x, y, alignX)
 
+
     local size1 = bitmapText:MeasureText(lorem, gMaxWidth)
+    local size = Vector.Create(size1)
+
     bitmapText:DrawText2d(gRenderer, x, y, lorem, Vector.Create(0,0,0,1), gMaxWidth)
     drawCross(x, y)
     drawDot(x, y)
@@ -68,6 +71,9 @@ function drawText(bitmapText, x, y, alignX)
 
     end
 
+    -- yeh this is pretty hacky
+    return size
+
 end
 
 
@@ -90,20 +96,27 @@ function update()
     local textX = 125
 
     alignX = "left"
-    bText:AlignText(alignX, "bottom")
-    drawText(bText, textX, 0, alignX)
+    alignY = "bottom"
+    bText:AlignText(alignX, alignY)
+    local size = drawText(bText, textX, 0, alignX)
+    local posLabel = string.format("AlignX: %s AlignY: %s", alignX, alignY)
+    gRenderer:DrawText2d(textX + size:X()/2, 0 - 15, posLabel, Vector.Create(0,0,0,1))
 
     alignX = "right"
-    bText:AlignText(alignX, "bottom")
-    drawText(bText, -textX, 0, alignX)
+    alignY = "bottom"
+    bText:AlignText(alignX, alignY)
+    size = drawText(bText, -textX, 0, alignX)
     gRenderer:AlignText("center", "center")
-    gRenderer:DrawText2d(-textX, 0 - 50, "AlignX: right AlignY: top", Vector.Create(0,0,0,1))
+    local posLabel = string.format("AlignX: %s AlignY: %s", alignX, alignY)
+    gRenderer:DrawText2d(-textX - size:X()/2, 0 - 15, posLabel, Vector.Create(0,0,0,1))
 
 
     alignX = "center"
-    bText:AlignText("center", "center")
+    alignY = "center"
+    bText:AlignText(alignX, alignY)
     drawText(bText, 0, 150, alignX)
     gRenderer:AlignText("center", "center")
-    gRenderer:DrawText2d(0, 85, "AlignX: center AlignY: center MaxWidth: 200", Vector.Create(0,0,0,1), 200)
+    posLabel = string.format("AlignX: %s AlignY: %s", alignX, alignY)
+    gRenderer:DrawText2d(0, 95, posLabel, Vector.Create(0,0,0,1), 200)
 
 end
