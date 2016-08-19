@@ -76,11 +76,7 @@ function drawText(bitmapText, x, y, alignX)
 
 end
 
-
-bText = BitmapText:Create(DefaultFontDef)
-
-function update()
-
+function drawBackground()
     local x = 0
     local y = 0
     local halfWidth = System.ScreenWidth() / 2
@@ -92,31 +88,46 @@ function update()
         y + halfHeight,
         gBackColor
     )
+end
+
+function drawTextWithLabel(textX, textY, alignX, alignY)
+    local alignX = alignX
+    local alignY = alignY
+    bText:AlignText(alignX, alignY)
+
+    local posLabel = string.format("AlignX: %s AlignY: %s", alignX, alignY)
+
+    local posText = textX
+
+    if alignX == "center" then
+        posText = 0
+    end
+
+    local size = drawText(bText, posText, textY, alignX)
+    local offsetX = textX + size:X()/2
+    local offsetY = -15
+
+    if alignX == "right" then
+        offsetX = textX + (size:X() * -0.5)
+    elseif alignX == "center" then
+        offsetX = 0
+        offsetY = (textY - size:Y()*0.5) - 15
+    end
+
+    gRenderer:DrawText2d(offsetX , offsetY, posLabel, Vector.Create(0,0,0,1))
+end
+
+
+bText = BitmapText:Create(DefaultFontDef)
+
+function update()
+
+    drawBackground()
 
     local textX = 125
 
-    alignX = "left"
-    alignY = "bottom"
-    bText:AlignText(alignX, alignY)
-    local size = drawText(bText, textX, 0, alignX)
-    local posLabel = string.format("AlignX: %s AlignY: %s", alignX, alignY)
-    gRenderer:DrawText2d(textX + size:X()/2, 0 - 15, posLabel, Vector.Create(0,0,0,1))
-
-    alignX = "right"
-    alignY = "bottom"
-    bText:AlignText(alignX, alignY)
-    size = drawText(bText, -textX, 0, alignX)
-    gRenderer:AlignText("center", "center")
-    local posLabel = string.format("AlignX: %s AlignY: %s", alignX, alignY)
-    gRenderer:DrawText2d(-textX - size:X()/2, 0 - 15, posLabel, Vector.Create(0,0,0,1))
-
-
-    alignX = "center"
-    alignY = "center"
-    bText:AlignText(alignX, alignY)
-    drawText(bText, 0, 150, alignX)
-    gRenderer:AlignText("center", "center")
-    posLabel = string.format("AlignX: %s AlignY: %s", alignX, alignY)
-    gRenderer:DrawText2d(0, 95, posLabel, Vector.Create(0,0,0,1), 200)
+    drawTextWithLabel(textX, 0, "left", "bottom")
+    drawTextWithLabel(-textX, 0, "right", "bottom")
+    drawTextWithLabel(200, 150, "center", "center")
 
 end

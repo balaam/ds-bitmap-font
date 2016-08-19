@@ -1,5 +1,5 @@
 
-name = "Hello World"
+name = "Bitmap Test Project"
 width = 740
 height = 480
 manifest = "manifest.lua"
