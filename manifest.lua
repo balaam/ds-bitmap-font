@@ -13,6 +13,10 @@ manifest =
         {
             path = "BitmapText.lua"
         },
+        ['DefaultFontDef.lua'] =
+        {
+            path = "DefaultFontDef.lua"
+        },
     },
     shaders =
     {

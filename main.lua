@@ -6,6 +6,7 @@ LoadLibrary("Asset")
 LoadLibrary("System")
 
 Asset.Run("BitmapText.lua")
+Asset.Run("DefaultFontDef.lua")
 
 gRenderer = Renderer:Create()
 gRenderer:AlignText("center", "center")
@@ -70,7 +71,7 @@ function drawText(bitmapText, x, y, alignX)
 end
 
 
-bText = BitmapText:Create("font.png", 8, 8)
+bText = BitmapText:Create(DefaultFontDef)
 
 function update()
 

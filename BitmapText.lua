@@ -1,94 +1,15 @@
 BitmapText = {}
 BitmapText.__index = BitmapText
-function BitmapText:Create(texId, w, h)
-    local texture = Texture.Find(texId)
+function BitmapText:Create(def)
+    local texture = Texture.Find(def.texture)
     local this =
     {
         mTexture = texture,
         mWidth = texture:GetWidth(),
         mHeight = texture:GetHeight(),
-        mGlyphW = w,
-        mGlyphH = h,
-
-        mLookUp =
-        {
-            ['0'] = {0, 0},
-            ['1'] = {1, 0},
-            ['2'] = {2, 0},
-            ['3'] = {3, 0},
-            ['4'] = {4, 0},
-            ['5'] = {5, 0},
-            ['6'] = {6, 0},
-            ['7'] = {7, 0},
-            ['8'] = {8, 0},
-            ['9'] = {9, 0},
-
-            ['a'] = {0, 1},
-            ['b'] = {1, 1},
-            ['c'] = {2, 1},
-            ['d'] = {3, 1},
-            ['e'] = {4, 1},
-            ['f'] = {5, 1},
-            ['g'] = {6, 1},
-            ['h'] = {7, 1},
-            ['i'] = {8, 1},
-            ['j'] = {9, 1},
-            ['k'] = {10, 1},
-            ['l'] = {11, 1},
-            ['m'] = {12, 1},
-            ['n'] = {13, 1},
-            ['o'] = {14, 1},
-            ['p'] = {15, 1},
-            ['q'] = {16, 1},
-            ['r'] = {17, 1},
-            ['s'] = {18, 1},
-            ['t'] = {19, 1},
-            ['u'] = {20, 1},
-            ['v'] = {21, 1},
-            ['w'] = {22, 1},
-            ['x'] = {23, 1},
-            ['y'] = {24, 1},
-            ['z'] = {25, 1},
-            [' '] = {26, 1},
-
-            ['A'] = {0, 2},
-            ['B'] = {1, 2},
-            ['C'] = {2, 2},
-            ['D'] = {3, 2},
-            ['E'] = {4, 2},
-            ['F'] = {5, 2},
-            ['G'] = {6, 2},
-            ['H'] = {7, 2},
-            ['I'] = {8, 2},
-            ['J'] = {9, 2},
-            ['K'] = {10, 2},
-            ['L'] = {11, 2},
-            ['M'] = {12, 2},
-            ['N'] = {13, 2},
-            ['O'] = {14, 2},
-            ['P'] = {15, 2},
-            ['Q'] = {16, 2},
-            ['R'] = {17, 2},
-            ['S'] = {18, 2},
-            ['T'] = {19, 2},
-            ['U'] = {20, 2},
-            ['V'] = {21, 2},
-            ['W'] = {22, 2},
-            ['X'] = {23, 2},
-            ['Y'] = {24, 2},
-            ['Z'] = {25, 2},
-
-            ['/'] = {0, 4},
-            ['-'] = {1, 4},
-            ['`'] = {2, 4},
-            ['!'] = {3, 4},
-            ['?'] = {4, 4},
-            [':'] = {5, 4},
-            ['@'] = {6, 4},
-            [','] = {7, 4},
-            ['.'] = {8, 4},
-
-        },
+        mGlyphW = def.width,
+        mGlyphH = def.height,
+        mLookUp = def.lookup,
         mSprite = Sprite.Create(),
         mAlignX = "left",
         mAlignY = "top"
@@ -102,6 +23,14 @@ end
 
 function BitmapText:AlignText(x, y)
     self.mAlignX = x
+    self.mAlignY = y
+end
+
+function BitmapText:AlignTextX(x)
+    self.mAlignX = x
+end
+
+function BitmapText:AlignTextY(y)
     self.mAlignY = y
 end
 
@@ -132,7 +61,7 @@ function BitmapText:RenderSubString(renderer, x, y, text, start, finish, color)
 
     start = start or 1
     finish = finish or string.len(text)
-    color = color or Vector.Create(0, 0, 0, 1)
+    color = color or Vector.Create(1, 1, 1, 1)
 
     self.mSprite:SetColor(color)
     local prevC = -1
@@ -173,7 +102,7 @@ function BitmapText:DrawText2d(renderer, x, y, text, color, maxWidth)
     local lineEnd = 1
     local textLen = string.len(text)
 
-    while lineEnd < textLen do
+    while lineEnd < (textLen + 1) do
 
         local outStart, lEnd, outPixelWidth =
             self:NextLine(text, lineEnd, maxWidth)
@@ -193,6 +122,11 @@ function BitmapText:DrawText2d(renderer, x, y, text, color, maxWidth)
                         color)
 
         y = y - self.mGlyphH;
+
+        -- so the while loop will properly support 1 char strings
+        if lineEnd == textLen then
+            break
+        end
     end
 
 end
@@ -337,6 +271,10 @@ function BitmapText:CountLines(text, maxWidth)
     local outStart = -1
 
     local textLen = string.len(text)
+
+    if textLen == 1 then
+        return 1
+    end
 
     while lineEnd < textLen do
 
