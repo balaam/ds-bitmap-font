@@ -37,13 +37,13 @@ function drawCross(x, y)
     gRenderer:DrawLine2d(x, y, x + 60, y, gLineColor)
 end
 
-function drawText(bitmapText, x, y, alignX)
+function drawText(bitmapText, x, y, alignX, text)
 
-
-    local size1 = bitmapText:MeasureText(lorem, gMaxWidth)
+    text = text or lorem
+    local size1 = bitmapText:MeasureText(text, gMaxWidth)
     local size = Vector.Create(size1)
 
-    bitmapText:DrawText2d(gRenderer, x, y, lorem, Vector.Create(0,0,0,1), gMaxWidth)
+    bitmapText:DrawText2d(gRenderer, x, y, text, Vector.Create(0,0,0,1), gMaxWidth)
     drawCross(x, y)
     drawDot(x, y)
 
@@ -130,4 +130,7 @@ function update()
     drawTextWithLabel(-textX, 0, "right", "bottom")
     drawTextWithLabel(200, 150, "center", "center")
 
+    local x = 0
+    local y = -100
+    drawText(bText, x, y, "center", "1010")
 end
