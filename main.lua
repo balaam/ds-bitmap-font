@@ -7,6 +7,7 @@ LoadLibrary("System")
 
 Asset.Run("BitmapText.lua")
 Asset.Run("DefaultFontDef.lua")
+Asset.Run("CombatFontDef.lua")
 
 gRenderer = Renderer:Create()
 gRenderer:AlignText("center", "center")
@@ -37,16 +38,16 @@ function drawCross(x, y)
     gRenderer:DrawLine2d(x, y, x + 60, y, gLineColor)
 end
 
-function drawText(bitmapText, x, y, alignX, alignY, text, maxW)
+function drawText(bitmapText, x, y, alignX, alignY, text, maxW, color)
 
     local maxWidth = maxW or gMaxWidth
     text = text or lorem
     local size1 = bitmapText:MeasureText(text, maxWidth)
     local size = Vector.Create(size1)
 
-    bText:AlignText(alignX, alignY or "bottom")
+    bitmapText:AlignText(alignX, alignY or "bottom")
 
-    bitmapText:DrawText2d(gRenderer, x, y, text, Vector.Create(0,0,0,1), maxWidth)
+    bitmapText:DrawText2d(gRenderer, x, y, text, color or Vector.Create(0,0,0,1), maxWidth)
     drawCross(x, y)
     drawDot(x, y)
 
@@ -132,6 +133,7 @@ end
 
 
 bText = BitmapText:Create(DefaultFontDef)
+cText = BitmapText:Create(CombatFontDef)
 
 function update()
 
@@ -145,6 +147,9 @@ function update()
 
     local x = 0
     local y = -100
+
+    drawText(cText, x, y - 25, "center", "top", "11337", 30, Vector.Create(1,1,1,1))
+
     drawText(bText, x, y, "center", "bottom", "1010")
     drawText(bText, x - 50, y, "right", "bottom", "1010")
     drawText(bText, x + 50, y, "left", "bottom", "1010")
@@ -158,4 +163,6 @@ function update()
     drawText(bText, x, y, "center", "top", "1010 101010", 30)
     drawText(bText, x - 50, y, "right", "top", "1010 1010", 30)
     drawText(bText, x + 50, y, "left", "top", "1010 1010", 30)
+
+
 end

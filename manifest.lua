@@ -17,6 +17,10 @@ manifest =
         {
             path = "DefaultFontDef.lua"
         },
+        ['CombatFontDef.lua'] =
+        {
+            path = "CombatFontDef.lua"
+        },
     },
     shaders =
     {
@@ -34,6 +38,11 @@ manifest =
         ['font.png'] =
         {
             path = "bitmap_font.png",
+            scale = "pixelart"
+        },
+        ['combat_font.png'] =
+        {
+            path = "combat_font.png",
             scale = "pixelart"
         },
     }
