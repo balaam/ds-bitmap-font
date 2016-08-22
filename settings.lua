@@ -1,8 +1,11 @@
 
 name = "Bitmap Test Project"
-width = 740
-height = 480
+width = 320
+height = 244
 manifest = "manifest.lua"
+
+display_width = width * 2
+display_height = height * 2
 
 --
 -- This script is expected to be an asset in the manifest file.

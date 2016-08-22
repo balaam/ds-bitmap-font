@@ -1,3 +1,14 @@
+-- On writing next character
+-- 1. Advance by prev characters amount
+-- 2. Left align glyph to that point
+-- 3. Increment advance by glyphs amount
+--
+-- Glyph alignment and advancemnt is linked
+-- and it shouldn't be.
+-- Start with a stepper drawing
+-- where next glyph should appear
+
+
 BitmapText = {}
 BitmapText.__index = BitmapText
 function BitmapText:Create(def)
@@ -45,11 +56,11 @@ function BitmapText:AlignTextY(y)
 end
 
 function BitmapText:IndexToUV(x, y)
-    local width = self.mGlyphW/self.mWidth
+    local width = (w or self.mGlyphW)/self.mWidth
     local height = self.mGlyphH/self.mHeight
 
-    local _x = x * width
-    local _y = y * height
+    local _x = x * (self.mGlyphW/self.mWidth)
+    local _y = y * (self.mGlyphH/self.mHeight)
 
     return _x, _y, _x + width, _y + height
 end
@@ -84,7 +95,7 @@ function BitmapText:RenderSubString(renderer, x, y, text, start, finish, color)
         end
 
         self.mSprite:SetUVs(self:GlyphUV(c))
-        self.mSprite:SetPosition(x, y)
+        self.mSprite:SetPosition(x + (self.mGlyphW * 0.5), y)
         renderer:DrawSprite(self.mSprite)
 
         prevC = c
@@ -117,7 +128,7 @@ function BitmapText:DrawText2d(renderer, x, y, text, color, maxWidth)
     end
 
     -- local c = string.sub(text, 1, 1)
-    x = x + self.mGlyphW * 0.5
+    -- x = x + self.mGlyphW * 0.5
 
     while lineEnd < (textLen + 1) do
 

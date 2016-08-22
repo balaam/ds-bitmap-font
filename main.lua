@@ -4,10 +4,13 @@ LoadLibrary("Sprite")
 LoadLibrary("Vector")
 LoadLibrary("Asset")
 LoadLibrary("System")
+LoadLibrary("Keyboard")
 
 Asset.Run("BitmapText.lua")
 Asset.Run("DefaultFontDef.lua")
 Asset.Run("CombatFontDef.lua")
+Asset.Run("FantasyFontDef.lua")
+
 
 gRenderer = Renderer:Create()
 gRenderer:AlignText("center", "center")
@@ -63,10 +66,7 @@ function drawText(bitmapText, x, y, alignX, alignY, text, maxW, color)
         y = y - size1:Y()
     end
 
-    gRenderer:DrawLine2d(x, y, x + size1:X(), y, Vector.Create(1, 0, 0, 1))
-    gRenderer:DrawLine2d(x, y, x, y + size1:Y(), Vector.Create(1, 0, 0, 1))
-    gRenderer:DrawLine2d(x + size1:X(), y, x + size1:X(), y + size1:Y(), Vector.Create(1,0,0,1))
-    gRenderer:DrawLine2d(x + size1:X(), y + size1:Y(), x, y + size1:Y(), Vector.Create(1,0,0,1))
+    drawBox(x,y,size1)
 
 
 
@@ -75,7 +75,14 @@ function drawText(bitmapText, x, y, alignX, alignY, text, maxW, color)
 
 end
 
-function drawBackground()
+function drawBox(x,y,size)
+    gRenderer:DrawLine2d(x, y, x + size:X(), y, Vector.Create(1, 0, 0, 1))
+    gRenderer:DrawLine2d(x, y, x, y + size:Y(), Vector.Create(1, 0, 0, 1))
+    gRenderer:DrawLine2d(x + size:X(), y, x + size:X(), y + size:Y(), Vector.Create(1,0,0,1))
+    gRenderer:DrawLine2d(x + size:X(), y + size:Y(), x, y + size:Y(), Vector.Create(1,0,0,1))
+end
+
+function drawBackground(color)
     local x = 0
     local y = 0
     local halfWidth = System.ScreenWidth() / 2
@@ -85,7 +92,7 @@ function drawBackground()
         y - halfHeight,
         x + halfWidth,
         y + halfHeight,
-        gBackColor
+        color or gBackColor
     )
 end
 
@@ -134,9 +141,52 @@ end
 
 bText = BitmapText:Create(DefaultFontDef)
 cText = BitmapText:Create(CombatFontDef)
+fText = BitmapText:Create(FantasyFontDef)
+
+local pageIndex = 2
 
 function update()
 
+    if pageIndex == 1 then
+        DrawPage1()
+
+        if Keyboard.JustPressed(KEY_RIGHT) then
+            pageIndex = 2
+        end
+
+    elseif pageIndex == 2 then
+
+        DrawPage2()
+
+        if Keyboard.JustPressed(KEY_LEFT) then
+            pageIndex = 1
+        end
+    end
+    -- fText:DrawText2d(gRenderer,0,0, "the quick brown fox jumps over the lazy dog", Vector.Create(1,1,1,1), -1)
+end
+
+local doOnce = false
+
+function DrawPage2()
+
+    local str = "mellom"
+
+    drawBackground(Vector.Create(0,0,68/255,1))
+    fText:AlignText("left", "top")
+    local size = fText:MeasureText(str)
+    gRenderer:DrawLine2d(-100, 100, -100 + size:X(), 100, Vector.Create(1, 0, 0, 1))
+    drawBox(-100, 100, size * Vector.Create(1,-1))
+    fText:DrawText2d(gRenderer, -100, 100, str)
+    drawDot(-100, 100)
+
+    if doOnce == false then
+        -- fText:CalcWidthDebug(str)
+        doOnce = true
+    end
+
+end
+
+function DrawPage1()
     drawBackground()
 
     local textX = 125
@@ -163,6 +213,5 @@ function update()
     drawText(bText, x, y, "center", "top", "1010 101010", 30)
     drawText(bText, x - 50, y, "right", "top", "1010 1010", 30)
     drawText(bText, x + 50, y, "left", "top", "1010 1010", 30)
-
 
 end
