@@ -170,7 +170,7 @@ local doOnce = false
 function DrawPage2()
 
     -- space messes this up?
-    local str = "ABCDEFGHIJKLMN"
+    local str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
     drawBackground(Vector.Create(0,0,68/255,1))
     fText:AlignText("left", "top")
@@ -178,6 +178,8 @@ function DrawPage2()
     gRenderer:DrawLine2d(-100, 100, -100 + size:X(), 100, Vector.Create(1, 0, 0, 1))
     drawBox(-100, 100, size * Vector.Create(1,-1))
     fText:DrawText2d(gRenderer, -100, 100, str)
+
+    fText:DrawText2d(gRenderer, -100, 60, "Hello World")
     drawDot(-100, 100)
 
     if doOnce == false then
