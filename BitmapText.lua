@@ -37,6 +37,12 @@ function BitmapText:GlyphWidth(glyph)
     return data.stepX or self.mGlyphW
 end
 
+-- used for alignment
+function BitmapText:GlyphOffset(glyph)
+    local data = self.mLookUp[glyph] or self.mLookUp['?']
+    return (data.uv[3] or self.mGlyphW)*0.5
+end
+
 function BitmapText:GlyphUV(glyph)
     local data = self.mLookUp[glyph] or self.mLookUp['?']
     return self:IndexToUV(unpack(data.uv))
@@ -55,7 +61,7 @@ function BitmapText:AlignTextY(y)
     self.mAlignY = y
 end
 
-function BitmapText:IndexToUV(x, y)
+function BitmapText:IndexToUV(x, y, w)
     local width = (w or self.mGlyphW)/self.mWidth
     local height = self.mGlyphH/self.mHeight
 
@@ -95,7 +101,7 @@ function BitmapText:RenderSubString(renderer, x, y, text, start, finish, color)
         end
 
         self.mSprite:SetUVs(self:GlyphUV(c))
-        self.mSprite:SetPosition(x + (self.mGlyphW * 0.5), y)
+        self.mSprite:SetPosition(x + self:GlyphOffset(c), y)
         renderer:DrawSprite(self.mSprite)
 
         prevC = c
