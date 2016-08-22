@@ -169,7 +169,8 @@ local doOnce = false
 
 function DrawPage2()
 
-    local str = "mellom"
+    -- space messes this up?
+    local str = "dont do it cloud"
 
     drawBackground(Vector.Create(0,0,68/255,1))
     fText:AlignText("left", "top")

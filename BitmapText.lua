@@ -219,7 +219,7 @@ end
 
 function BitmapText:MeasureText(text, maxWidth)
 
-    maxWidth = maxWidth or -1
+    local maxWidth = maxWidth or -1
 
     if maxWidth < 1 then
 
@@ -273,9 +273,9 @@ function BitmapText:NextLine(text, cursor, maxWidth)
             local finishW = self:GlyphWidth(prevC)--self.mGlyphW;
 
             if start == cursor or
-                pixelWidth + kern + finishW < maxWidth then
+                (pixelWidth + kern + finishW) < maxWidth or
+                maxWidth == -1 then
                 pixelWidth = pixelWidth + finishW + kern
-
             else
                 finishW = self:GlyphWidth(prevC)
                 return cursor, start + 1, pixelWidthStart + finishW
