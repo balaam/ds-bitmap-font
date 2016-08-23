@@ -2,7 +2,7 @@ FantasyFontDef =
 {
     texture = "fantasy_font.png",
     cut_width = 6,
-    cut_height = 11,
+    cut_height = 12,
     lookup =
     {
       ['a'] = { uv = {0, 0}, stepX = 7 },
