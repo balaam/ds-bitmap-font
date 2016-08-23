@@ -190,7 +190,7 @@ function DrawPage2()
     fText:DrawText2d(gRenderer, x, 100, str, white, wrapWidth)
 
     fText:AlignText("left", "center")
-    fText:DrawText2d(gRenderer, 0, 60, '`Hello, World."')
+    fText:DrawText2d(gRenderer, 0, 60, '`Hello, %World."')
 
     drawDot(x, 100)
 
