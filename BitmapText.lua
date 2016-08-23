@@ -270,21 +270,23 @@ function BitmapText:NextLine(text, cursor, maxWidth)
     for i = cursor, string.len(text) do
         local c = string.sub(text, i, i)
 
-        if self:IsWhiteSpace(c) then
-            start = math.max(cursor, i - 1)
-            pixelWidthStart = pixelWidth
-            prevNonWhite = prevC
-        end
+
 
         if prevC ~= -1 then
 
-            local kern = 0;
             local finishW = self:GlyphWidth(prevC)--self.mGlyphW;
 
             if start == cursor or
-                (pixelWidth + kern + finishW) < maxWidth or
+                (pixelWidth  + finishW) < maxWidth or
                 maxWidth == -1 then
-                pixelWidth = pixelWidth + finishW + kern
+
+                if self:IsWhiteSpace(c) then
+                    start = math.max(cursor, i - 1)
+                    pixelWidthStart = pixelWidth
+                    prevNonWhite = prevC
+                end
+
+                pixelWidth = pixelWidth + finishW
             else
                 finishW = self:GlyphWidth(prevC)
                 return cursor, start + 1, pixelWidthStart + finishW
@@ -295,7 +297,6 @@ function BitmapText:NextLine(text, cursor, maxWidth)
         finish = finish + 1;
 
     end
-
 
     local finishW = 0;
 

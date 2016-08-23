@@ -176,11 +176,22 @@ function DrawPage2()
     fText:AlignText("left", "center")
     local x = -150
     local size = fText:MeasureText(str)
-    gRenderer:DrawLine2d(x, 100, x + size:X(), 100, Vector.Create(1, 0, 0, 1))
-    drawBox(x, 100, size * Vector.Create(1,-1))
-    fText:DrawText2d(gRenderer, x, 100, str)
+    local white = Vector.Create(1,1,1,1)
 
-    fText:DrawText2d(gRenderer, -100, 60, '`Hello, World."')
+    local wrapWidth = 75
+
+    gRenderer:DrawLine2d(x + wrapWidth, 100-30, x + wrapWidth, 100 + 30)
+    local line1 = 58
+    gRenderer:DrawLine2d(x, 120, x + line1, 120, Vector.Create(1, 0, 0, 1))
+    local line2 = 72
+    gRenderer:DrawLine2d(x, 105, x + line2, 105, Vector.Create(1, 0, 0, 1))
+    -- gRenderer:DrawLine2d(x, 100, x + size:X(), 100, Vector.Create(1, 0, 0, 1))
+    -- drawBox(x, 100, size * Vector.Create(1,-1))
+    fText:DrawText2d(gRenderer, x, 100, str, white, wrapWidth)
+
+    fText:AlignText("left", "center")
+    fText:DrawText2d(gRenderer, 0, 60, '`Hello, World."')
+
     drawDot(x, 100)
 
     if doOnce == false then
