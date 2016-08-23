@@ -70,5 +70,6 @@ FantasyFontDef =
       ['Y'] = { uv = {37, 1, 12}, stepX = 8 },
       ['Z'] = { uv = {39, 1}, stepX = 8 },
       ['$'] = { uv = {40, 1}, stepX = 7 },
+      ['#'] = { uv = {41, 1, 10}, stepX = 10 },
     }
 }
