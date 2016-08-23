@@ -1,6 +1,11 @@
 -- In RenderText2d the yOffset for the center selection
--- - Move sub-pixel on the y and it fails
--- - Padding might help with this
+-- The overlap isn't working I think it's because the last
+-- character width isn't being counted in NextLine
+-- it does 1..n always sampling the previous character
+
+-- or
+
+-- it might work and it's the visualisatio that's bad!
 
 
 
@@ -290,6 +295,7 @@ function BitmapText:NextLine(text, cursor, maxWidth)
         finish = finish + 1;
 
     end
+
 
     local finishW = 0;
 
