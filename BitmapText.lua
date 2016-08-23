@@ -1,12 +1,7 @@
--- On writing next character
--- 1. Advance by prev characters amount
--- 2. Left align glyph to that point
--- 3. Increment advance by glyphs amount
---
--- Glyph alignment and advancemnt is linked
--- and it shouldn't be.
--- Start with a stepper drawing
--- where next glyph should appear
+-- In RenderText2d the yOffset for the center selection
+-- - Move sub-pixel on the y and it fails
+-- - Padding might help with this
+
 
 
 BitmapText = {}
@@ -108,8 +103,18 @@ function BitmapText:RenderSubString(renderer, x, y, text, start, finish, color)
     end
 end
 
+function BitmapText:Round(n)
+    if n < 0 then
+        return math.ceil(n - 0.5)
+    else
+        return math.floor(n + 0.5)
+    end
+end
 
 function BitmapText:DrawText2d(renderer, x, y, text, color, maxWidth)
+
+    x = self:Round(x)
+    y = self:Round(y)
 
     local yOffset = 0
     maxWidth = maxWidth or -1
@@ -122,8 +127,7 @@ function BitmapText:DrawText2d(renderer, x, y, text, color, maxWidth)
         yOffset = lines * self.mGlyphH
     elseif self.mAlignY == "center" then
         local lines = self:CountLines(text, maxWidth)
-        lines = lines * 0.5
-        yOffset = lines * self.mGlyphH
+        yOffset = lines * math.floor((self.mGlyphH*0.5))
     end
 
     local lineEnd = 1

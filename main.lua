@@ -170,17 +170,18 @@ local doOnce = false
 function DrawPage2()
 
     -- space messes this up?
-    local str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    local str = "Continuing to mess around with bitmap fonts!"
 
     drawBackground(Vector.Create(0,0,68/255,1))
-    fText:AlignText("left", "top")
+    fText:AlignText("left", "center")
+    local x = -150
     local size = fText:MeasureText(str)
-    gRenderer:DrawLine2d(-100, 100, -100 + size:X(), 100, Vector.Create(1, 0, 0, 1))
-    drawBox(-100, 100, size * Vector.Create(1,-1))
-    fText:DrawText2d(gRenderer, -100, 100, str)
+    gRenderer:DrawLine2d(x, 100, x + size:X(), 100, Vector.Create(1, 0, 0, 1))
+    drawBox(x, 100, size * Vector.Create(1,-1))
+    fText:DrawText2d(gRenderer, x, 100, str)
 
-    fText:DrawText2d(gRenderer, -100, 60, "Hello World")
-    drawDot(-100, 100)
+    fText:DrawText2d(gRenderer, -100, 60, "\"Hello, World.`")
+    drawDot(x, 100)
 
     if doOnce == false then
         -- fText:CalcWidthDebug(str)
