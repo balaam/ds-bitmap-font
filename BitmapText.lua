@@ -1,11 +1,6 @@
--- In RenderText2d the yOffset for the center selection
--- The overlap isn't working I think it's because the last
--- character width isn't being counted in NextLine
--- it does 1..n always sampling the previous character
+-- Should be support for newlines
 
--- or
-
--- it might work and it's the visualisatio that's bad!
+-- Render and nextline and size
 
 
 

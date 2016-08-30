@@ -1,7 +1,7 @@
 
 name = "Bitmap Test Project"
 width = 320*3
-height = 244*3
+height = 224*3
 manifest = "manifest.lua"
 
 -- display_width = width * 2

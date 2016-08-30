@@ -170,7 +170,7 @@ local doOnce = false
 function DrawPage2()
 
     -- space messes this up?
-    local str = "`This text is much crisper, looking forward to getting it in the game!\""
+    local str = "`This text is much crisper, like 10x crisper, looking forward to getting it in the game!\""
 
     drawBackground(Vector.Create(0,0,68/255,1))
     fText:AlignText("left", "top")
