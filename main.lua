@@ -10,6 +10,7 @@ Asset.Run("BitmapText.lua")
 Asset.Run("DefaultFontDef.lua")
 Asset.Run("CombatFontDef.lua")
 Asset.Run("FantasyFontDef.lua")
+Asset.Run("DamageFontDef.lua")
 
 
 gRenderer = Renderer:Create()
@@ -142,6 +143,9 @@ end
 bText = BitmapText:Create(DefaultFontDef)
 cText = BitmapText:Create(CombatFontDef)
 fText = BitmapText:Create(FantasyFontDef)
+
+-- damagefont
+dText = BitmapText:Create(DamageFontDef)
 
 local pageIndex = 2
 

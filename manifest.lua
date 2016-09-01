@@ -25,6 +25,10 @@ manifest =
         {
             path = "FantasyFontDef.lua"
         },
+        ['DamageFontDef.lua'] =
+        {
+            path = "DamageFontDef.lua"
+        },
     },
     shaders =
     {
@@ -52,6 +56,11 @@ manifest =
         ['fantasy_font.png'] =
         {
             path = "fantasy_font.png",
+            scale = "pixelart"
+        },
+        ['damage_font.png'] =
+        {
+            path = "damage_font.png",
             scale = "pixelart"
         },
     }
