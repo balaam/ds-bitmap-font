@@ -147,24 +147,23 @@ fText = BitmapText:Create(FantasyFontDef)
 -- damagefont
 dText = BitmapText:Create(DamageFontDef)
 
+local PageNumber = 3
 local pageIndex = 2
 
 function update()
 
     if pageIndex == 1 then
         DrawPage1()
-
-        if Keyboard.JustPressed(KEY_RIGHT) then
-            pageIndex = 2
-        end
-
     elseif pageIndex == 2 then
-
         DrawPage2()
+    elseif pageIndex == 3 then
+    end
 
-        if Keyboard.JustPressed(KEY_LEFT) then
-            pageIndex = 1
-        end
+    if Keyboard.JustPressed(KEY_RIGHT) then
+        pageIndex = math.min(pageIndex + 1, PageNumber)
+    end
+    if Keyboard.JustPressed(KEY_LEFT) then
+        pageIndex = math.max(pageIndex - 1, 1)
     end
     -- fText:DrawText2d(gRenderer,0,0, "the quick brown fox jumps over the lazy dog", Vector.Create(1,1,1,1), -1)
 end
