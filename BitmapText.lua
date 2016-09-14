@@ -113,6 +113,10 @@ end
 
 function BitmapText:DrawText2d(renderer, x, y, text, color, maxWidth)
 
+    -- We can only draw strings, so coerce all
+    -- other types to string
+    text = tostring(text)
+
     x = self:Round(x)
     y = self:Round(y)
 

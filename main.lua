@@ -157,6 +157,7 @@ function update()
     elseif pageIndex == 2 then
         DrawPage2()
     elseif pageIndex == 3 then
+        DrawPage3()
     end
 
     if Keyboard.JustPressed(KEY_RIGHT) then
@@ -169,6 +170,12 @@ function update()
 end
 
 local doOnce = false
+
+function DrawPage3()
+    str = 1234567890
+    dText:AlignText("center", "center")
+    dText:DrawText2d(gRenderer, 0, 0, str)
+end
 
 function DrawPage2()
 
